@@ -1,259 +1,175 @@
 import streamlit as st
-import time
 import random
+import time
 
-# --- 1. 页面配置 ---
+# --- 1. 页面配置：强调宁静与安全 ---
 st.set_page_config(
-    page_title="暖暖丘比特",
-    page_icon="🏹",
-    layout="centered",
-    initial_sidebar_state="collapsed"
+    page_title="暖暖·心灵栖息地",
+    page_icon="🕊️",
+    layout="centered"
 )
 
-# --- 2. 注入自定义 CSS (核心：暖色调 + 动态效果) ---
+# --- 2. 资源链接 ---
+IMAGE_URL = "https://raw.githubusercontent.com/Xipeng-Ma/nuannuan/main/cupid.png"
+
+# --- 3. 温柔系 CSS (低饱和度，护眼，宁静) ---
 st.markdown("""
 <style>
-/* === 全局暖色调背景 === */
-.stApp {
-    /* 温暖的粉紫渐变：从柔粉到淡紫再到暖橙 */
-    background: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 30%, #a18cd1 70%, #fbc2eb 100%);
-    background-attachment: fixed;
-    min-height: 100vh;
-    font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
-}
-
-/* === 动态丘比特容器 === */
-.cupid-wrapper {
-    text-align: center;
-    margin-bottom: 15px;
-    position: relative;
-    z-index: 10;
-}
-
-/* 丘比特图片样式 */
-.cupid-img {
-    width: 140px; /* 稍微大一点，更可爱 */
-    height: auto;
-    /* 默认状态：轻微浮动 (呼吸感) */
-    animation: float 3s ease-in-out infinite;
-    filter: drop-shadow(0 8px 12px rgba(255, 100, 100, 0.3)); /* 粉色投影 */
-    transition: transform 0.3s ease;
-}
-
-/* === 动态效果定义 === */
-
-/* 1. 浮动动画 (呼吸感) */
-@keyframes float {
-    0% { transform: translateY(0px) rotate(0deg); }
-    50% { transform: translateY(-12px) rotate(2deg); }
-    100% { transform: translateY(0px) rotate(0deg); }
-}
-
-/* 2. 思考时的动画 (左右摇摆) */
-.thinking {
-    animation: swing 1s ease-in-out infinite !important;
-}
-@keyframes swing {
-    0% { transform: rotate(-5deg); }
-    50% { transform: rotate(5deg); }
-    100% { transform: rotate(-5deg); }
-}
-
-/* 3. 射箭/开心时的动画 (心跳放大) */
-.shooting {
-    animation: heartbeat 0.6s ease-in-out !important;
-}
-@keyframes heartbeat {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.2); }
-    100% { transform: scale(1); }
-}
-
-/* === 聊天界面美化 (暖色系) === */
-
-/* 输入框 */
-.stTextInput > div > div > input {
-    background-color: rgba(255, 255, 255, 0.9);
-    border-radius: 25px;
-    border: 2px solid #fff;
-    color: #d63384; /* 深粉色文字 */
-    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.4);
-}
-.stTextInput > div > div > input::placeholder {
-    color: #ff9a9e;
-}
-
-/* 发送按钮 */
-.stButton > button {
-    background: linear-gradient(90deg, #ff9a9e 0%, #fad0c4 100%);
-    color: white;
-    border-radius: 25px;
-    border: none;
-    font-weight: bold;
-    box-shadow: 0 4px 15px rgba(255, 154, 158, 0.5);
-    transition: all 0.3s;
-}
-.stButton > button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 6px 20px rgba(255, 154, 158, 0.7);
-}
-
-/* 聊天气泡 */
-.chat-message {
-    padding: 14px 18px;
-    border-radius: 20px;
-    margin-bottom: 15px;
-    max-width: 85%;
-    line-height: 1.6;
-    font-size: 15px;
-    backdrop-filter: blur(8px); /* 毛玻璃效果 */
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-}
-
-/* 用户消息 (右侧，深粉字) */
-.user-msg {
-    background-color: rgba(255, 255, 255, 0.6);
-    margin-left: auto;
-    text-align: right;
-    border-bottom-right-radius: 5px;
-    color: #c2185b;
-    border: 1px solid rgba(255,255,255,0.4);
-}
-
-/* 暖暖消息 (左侧，带丘比特图标) */
-.nuan-msg {
-    background-color: rgba(255, 255, 255, 0.85);
-    margin-right: auto;
-    text-align: left;
-    border-bottom-left-radius: 5px;
-    color: #880e4f;
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* 隐藏 Streamlit 默认元素 */
-#MainMenu {visibility: hidden;}
-footer {visibility: hidden;}
-header {visibility: hidden;}
-
-/* 标题样式 */
-.app-title {
-    text-align: center;
-    color: #fff;
-    font-size: 1.8em;
-    font-weight: bold;
-    text-shadow: 0 2px 4px rgba(161, 140, 209, 0.5);
-    margin-bottom: 5px;
-}
-.app-subtitle {
-    text-align: center;
-    color: rgba(255,255,255,0.9);
-    font-size: 0.95em;
-    margin-bottom: 20px;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
-}
-
+    /* 背景：温暖的米白色，不刺眼 */
+    .stApp {
+        background-color: #fdfbf7;
+    }
+    /* 字体颜色：深灰褐色，比纯黑更柔和 */
+    h1, h2, h3, p, div, label {
+        color: #5d5d5d;
+        font-family: 'Helvetica', 'Microsoft YaHei', sans-serif;
+    }
+    /* 标题居中，字号适中 */
+    h1 {
+        text-align: center;
+        font-weight: normal;
+        letter-spacing: 2px;
+        color: #8d6e63;
+    }
+    /* 输入框样式：圆润，无边框感 */
+    .stTextInput > div > div > input {
+        border-radius: 15px;
+        border: 1px solid #e0e0e0;
+        background-color: #ffffff;
+        color: #5d5d5d;
+    }
+    /* 按钮样式：像棉花糖一样柔软 */
+    .stButton > button {
+        background-color: #ffccbc;
+        color: #5d4037;
+        border-radius: 25px;
+        border: none;
+        font-weight: normal;
+        width: 100%;
+        padding: 12px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        transition: all 0.3s;
+    }
+    .stButton > button:hover {
+        background-color: #ffab91;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        color: #5d4037;
+    }
+    /* 消息气泡样式 */
+    .success-box {
+        background-color: #fff3e0;
+        padding: 20px;
+        border-radius: 15px;
+        border-left: 5px solid #ffccbc;
+        margin-top: 20px;
+        line-height: 1.6;
+    }
+    /* 隐藏默认的 Streamlit 菜单，保持界面纯净 */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
 </style>
 """, unsafe_allow_html=True)
 
-# --- 3. 初始化会话状态 ---
-if "messages" not in st.session_state:
-    st.session_state.messages = []
-if "nuan_status" not in st.session_state:
-    st.session_state.nuan_status = "idle" # idle, thinking, shooting
+# --- 4. 核心内容：温柔的陪伴 ---
 
-# --- 4. 顶部：动态丘比特展示区 ---
+# 顶部：丘比特的问候
+st.title("🕊️ 你并不孤单")
+try:
+    st.image(IMAGE_URL, width=220, caption="我会一直在这里陪着你")
+except:
+    pass
 
-# 替换下面的链接为你自己的 GitHub 图片链接！
-# 格式：https://raw.githubusercontent.com/用户名/仓库名/main/cupid.png
-IMAGE_URL = "https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO_NAME/main/cupid.png"
-
-# 根据状态决定添加什么 CSS 类
-status_class = ""
-if st.session_state.nuan_status == "thinking":
-    status_class = "thinking"
-elif st.session_state.nuan_status == "shooting":
-    status_class = "shooting"
-
-st.markdown(f"""
-<div class="cupid-wrapper">
-    <img src="{IMAGE_URL}" class="cupid-img {status_class}" alt="暖暖丘比特" id="cupid-element">
-    <div class="app-title">🏹 暖暖丘比特</div>
-    <div class="app-subtitle">射中你的心，陪你度过每一天 🌸</div>
+st.markdown("""
+<div style='text-align: center; color: #8d6e63; margin-bottom: 30px;'>
+    这里没有评判，没有压力。<br>
+    只有暖暖的丘比特，愿意倾听你的一切。
 </div>
 """, unsafe_allow_html=True)
 
-# --- 5. 聊天记录显示 ---
-for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        if message["role"] == "user":
-            st.markdown(f"<div class='chat-message user-msg'>{message['content']}</div>", unsafe_allow_html=True)
-        else:
-            st.markdown(f"""
-            <div class='chat-message nuan-msg'>
-                <span style='font-size: 1.4em;'>💘</span>
-                <span>{message['content']}</span>
-            </div>
-            """, unsafe_allow_html=True)
+# --- 功能一：情绪树洞 (核心) ---
+st.subheader("🌲 今天的你，还好吗？")
+st.write("想说什么都可以，哪怕是碎碎念，或者是沉默的叹息。丘比特都会认真听。")
 
-# --- 6. 处理用户输入与动态逻辑 ---
-if prompt := st.chat_input("跟暖暖说说话吧..."):
-    # 1. 显示用户消息
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    with st.chat_message("user"):
-        st.markdown(f"<div class='chat-message user-msg'>{prompt}</div>", unsafe_allow_html=True)
+user_feeling = st.text_area(
+    "在这里写下你的心情...", 
+    height=150, 
+    placeholder="例如：今天觉得好累，好像什么都做不好...",
+    label_visibility="collapsed"
+)
 
-    # 2. 进入思考状态 (丘比特开始摇摆)
-    st.session_state.nuan_status = "thinking"
-    st.rerun() # 重新运行以更新动画
+# 预设的温柔回应库 (针对抑郁情绪的特别设计)
+comfort_responses = [
+    "谢谢你愿意告诉我这些。即使现在很黑，我也会提着灯陪你坐一会儿。🕯️",
+    "辛苦了，真的辛苦了。你不需要时刻都坚强，此刻的脆弱也是被允许的。🫂",
+    "我听到了你的声音。请记住，你的存在本身，就是一件很美好的事情。🌟",
+    "没关系，不用急着好起来。我们就这样慢慢地呼吸，一下，又一下。🍃",
+    "世界有时候很冷，但我想给你一个暖暖的拥抱。你值得被爱，无条件地。❤️",
+    "你已经做得很好了，真的。能撑过今天，就是一种伟大的胜利。🏆",
+    "如果觉得太重了，就先把包袱放下来吧。丘比特帮你保管一会儿。🎒"
+]
 
-    # 模拟思考延迟
-    time.sleep(1.5)
-
-    # 3. 生成回复
-    with st.chat_message("assistant"):
-        message_placeholder = st.empty()
-        # 思考中的提示
-        message_placeholder.markdown("<div class='chat-message nuan-msg'><span style='font-size: 1.4em;'>💭</span><span>暖暖正在拉弓瞄准...</span></div>", unsafe_allow_html=True)
+if st.button("🕊️ 发送给丘比特"):
+    if user_feeling:
+        with st.spinner("丘比特正在认真倾听..."):
+            time.sleep(1.5) # 模拟思考，表示重视
         
-        time.sleep(0.8)
+        # 随机选择一句温柔的话，或者根据长度简单反馈
+        response = random.choice(comfort_responses)
         
-        # 简单的回复逻辑 (可替换为 API)
-        keywords = {"开心": "看到你笑，暖暖的箭都变甜了！🍬", 
-                    "难过": "别怕，暖暖马上射一支治愈之箭给你！🛡️❤️", 
-                    "爱": "咻~ 接收到了满溢的爱意！回射一支更大的！💞",
-                    "累": "快休息一下，暖暖帮你赶走疲劳小怪兽！💤✨"}
-        
-        reply = "咻~ 爱心箭射中你了！今天也要开心哦！🏹❤️" # 默认
-        for key, val in keywords.items():
-            if key in prompt:
-                reply = val
-                break
-        
-        # 4. 进入射箭/开心状态 (丘比特心跳放大)
-        st.session_state.nuan_status = "shooting"
-        st.rerun() # 重新运行以更新动画
-        
-        time.sleep(0.5) # 让用户看到心跳动画
-        
-        # 显示最终回复
-        message_placeholder.markdown(f"""
-        <div class='chat-message nuan-msg'>
-            <span style='font-size: 1.4em;'>💘</span>
-            <span>{reply}</span>
+        st.markdown(f"""
+        <div class="success-box">
+            <b>🕊️ 丘比特说：</b><br><br>
+            {response}
+            <br><br>
+            <i>(你的这段话，我已经好好收在心里了。)</i>
         </div>
         """, unsafe_allow_html=True)
-    
-    # 5. 存入历史并重置状态
-    st.session_state.messages.append({"role": "assistant", "content": reply})
-    st.session_state.nuan_status = "idle" # 恢复浮动
-    st.rerun()
+        
+        # 触发轻微的撒花，不要太吵闹
+        st.balloons()
+    else:
+        st.info("不想说话也没关系，丘比特会静静地陪着你。☁️")
 
-# --- 7. 底部提示 ---
+# --- 功能二：能量补给站 (替代之前的测试) ---
+st.markdown("---")
+st.subheader("☀️ 小小能量站")
+st.write("如果心里太累，试着做一件最小的事，或者读一句暖暖的话。")
+
+col1, col2 = st.columns(2)
+
+with col1:
+    if st.button("🌬️ 带我深呼吸"):
+        st.success("来，跟着我：吸气——(停顿)——呼气——。你做得很棒。")
+        st.write("> 再试一次：吸气... 感受空气进入身体... 呼气... 把烦恼都吹走...")
+
+with col2:
+    if st.button("🍬 领取今日糖果"):
+        candies = [
+            "你今天喝水了吗？记得照顾好自己的身体哦。",
+            "窗外的云在慢慢飘，你也像云一样自由，不必停留在原地。",
+            "哪怕只是起床刷了牙，今天也已经是成功的一天了。",
+            "有人也许正在世界的某个角落，因为你的存在而感到温暖。",
+            "允许自己休息一下，这不是偷懒，是充电。"
+        ]
+        st.success(f"🍬 **{random.choice(candies)}**")
+
+# --- 功能三：紧急求助 (重要！) ---
+st.markdown("---")
+with st.expander("🆘 如果我感觉非常糟糕，该怎么办？"):
+    st.warning("""
+    **亲爱的，如果你感到极度痛苦，或者有伤害自己的念头，请务必寻求专业的帮助：**
+    
+    - 📞 **全国希望24热线**: 400-161-9995
+    - 📞 **青少年公共服务热线**: 12355
+    - 🏥 请直接前往最近的医院急诊科，或拨打 110 / 120。
+    
+    你很重要，这个世界需要你。请给专业人士一个机会来帮助你。
+    """)
+
+# 页脚
 st.markdown("""
-<div style='text-align: center; margin-top: 40px; color: rgba(255,255,255,0.7); font-size: 0.8em;'>
-    <p>💡 小贴士：在浏览器菜单选择“添加到主屏幕”，把暖暖带回家！</p>
+<div style='text-align: center; color: #bcaaa4; margin-top: 40px; font-size: 12px;'>
+    愿温暖常伴你左右 | 暖暖丘比特 · 守护版
 </div>
 """, unsafe_allow_html=True)
