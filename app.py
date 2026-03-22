@@ -1,42 +1,88 @@
 import streamlit as st
 import random
 import time
+from PIL import Image, ImageDraw, ImageFont
 
-# --- 1. 页面配置：强调宁静与安全 ---
+# --- 1. 页面配置 ---
 st.set_page_config(
     page_title="暖暖·心灵栖息地",
     page_icon="🕊️",
     layout="centered"
 )
 
-# --- 2. 资源链接 ---
-IMAGE_URL = "https://raw.githubusercontent.com/Xipeng-Ma/nuannuan/main/cupid.png"
+# --- 2. 核心功能：用代码画一个丘比特 (解决图片加载失败问题) ---
+def create_cupid_image():
+    # 创建一个透明背景的图像
+    img = Image.new('RGBA', (300, 300), (255, 255, 255, 0))
+    draw = ImageDraw.Draw(img)
+    
+    # 定义颜色
+    skin_color = (255, 224, 189) # 肤色
+    wing_color = (255, 255, 255) # 翅膀白
+    bow_color = (255, 171, 145)  # 弓箭粉
+    heart_color = (255, 128, 128) # 爱心红
+    
+    # 画身体 (简单的圆形代表头)
+    draw.ellipse([100, 80, 200, 180], fill=skin_color, outline=(255, 200, 150), width=3)
+    
+    # 画眼睛 (闭着的笑眼，表示温柔)
+    draw.arc([120, 110, 140, 130], 0, 180, fill=(100, 100, 100), width=3)
+    draw.arc([160, 110, 180, 130], 0, 180, fill=(100, 100, 100), width=3)
+    
+    # 画嘴巴 (微笑)
+    draw.arc([130, 130, 170, 160], 0, 180, fill=(100, 100, 100), width=3)
+    
+    # 画翅膀 (左右各一个半圆)
+    draw.ellipse([40, 90, 110, 170], fill=wing_color, outline=(240, 240, 240), width=2)
+    draw.ellipse([190, 90, 260, 170], fill=wing_color, outline=(240, 240, 240), width=2)
+    
+    # 画手里的弓 (简单的弧线)
+    draw.arc([80, 180, 220, 280], 0, 180, fill=bow_color, width=5)
+    
+    # 画一颗飘在旁边的爱心
+    draw.polygon([(230, 60), (240, 50), (250, 60), (240, 80)], fill=heart_color)
+    draw.polygon([(230, 60), (220, 50), (210, 60), (220, 80)], fill=heart_color)
+    
+    return img
+
+# 生成图片对象
+cupid_img = create_cupid_image()
 
 # --- 3. 温柔系 CSS (低饱和度，护眼，宁静) ---
 st.markdown("""
 <style>
-    /* 背景：温暖的米白色，不刺眼 */
+    /* 背景：温暖的米白色到淡粉色的渐变 */
     .stApp {
-        background-color: #fdfbf7;
+        background: linear-gradient(180deg, #fdfbf7 0%, #fff0f5 100%);
     }
     /* 字体颜色：深灰褐色，比纯黑更柔和 */
-    h1, h2, h3, p, div, label {
+    h1, h2, h3, p, div, label, span {
         color: #5d5d5d;
         font-family: 'Helvetica', 'Microsoft YaHei', sans-serif;
     }
-    /* 标题居中，字号适中 */
+    /* 标题居中，字号适中，去掉攻击性 */
     h1 {
         text-align: center;
         font-weight: normal;
         letter-spacing: 2px;
         color: #8d6e63;
+        margin-top: 20px;
+    }
+    /* 副标题样式 */
+    .subtitle {
+        text-align: center;
+        color: #a1887f;
+        font-size: 16px;
+        margin-bottom: 30px;
+        line-height: 1.6;
     }
     /* 输入框样式：圆润，无边框感 */
-    .stTextInput > div > div > input {
+    .stTextInput > div > div > input, .stTextArea > div > div > textarea {
         border-radius: 15px;
         border: 1px solid #e0e0e0;
         background-color: #ffffff;
         color: #5d5d5d;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.02);
     }
     /* 按钮样式：像棉花糖一样柔软 */
     .stButton > button {
@@ -64,6 +110,7 @@ st.markdown("""
         border-left: 5px solid #ffccbc;
         margin-top: 20px;
         line-height: 1.6;
+        color: #5d4037;
     }
     /* 隐藏默认的 Streamlit 菜单，保持界面纯净 */
     #MainMenu {visibility: hidden;}
@@ -71,30 +118,30 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# --- 4. 核心内容：温柔的陪伴 ---
+# --- 4. 主界面内容 ---
 
-# 顶部：丘比特的问候
-st.title("🕊️ 你并不孤单")
-try:
-    st.image(IMAGE_URL, width=220, caption="我会一直在这里陪着你")
-except:
-    pass
+# 顶部：展示生成的图片和新文案
+col1, col2, col3 = st.columns([1, 2, 1])
+with col2:
+    st.image(cupid_img, use_column_width=False, caption="") # 显示代码画的图
 
+st.title("暖暖")
+# ✅ 修改后的文案：去掉了“射中”，改为“陪伴”和“接纳”
 st.markdown("""
-<div style='text-align: center; color: #8d6e63; margin-bottom: 30px;'>
-    这里没有评判，没有压力。<br>
-    只有暖暖的丘比特，愿意倾听你的一切。
+<div class='subtitle'>
+    你不必完美，只需存在。<br>
+    这里有一个安静的角落，愿意接住你所有的情绪。
 </div>
 """, unsafe_allow_html=True)
 
 # --- 功能一：情绪树洞 (核心) ---
-st.subheader("🌲 今天的你，还好吗？")
-st.write("想说什么都可以，哪怕是碎碎念，或者是沉默的叹息。丘比特都会认真听。")
+st.subheader("🌲 今天，想聊聊吗？")
+st.write("无论是开心、难过，还是仅仅觉得累了，都可以写下来。丘比特会一直在这里听着。")
 
 user_feeling = st.text_area(
     "在这里写下你的心情...", 
     height=150, 
-    placeholder="例如：今天觉得好累，好像什么都做不好...",
+    placeholder="例如：今天觉得好累，好像什么都做不好... 或者只是发个句号也可以。",
     label_visibility="collapsed"
 )
 
@@ -114,7 +161,7 @@ if st.button("🕊️ 发送给丘比特"):
         with st.spinner("丘比特正在认真倾听..."):
             time.sleep(1.5) # 模拟思考，表示重视
         
-        # 随机选择一句温柔的话，或者根据长度简单反馈
+        # 随机选择一句温柔的话
         response = random.choice(comfort_responses)
         
         st.markdown(f"""
@@ -131,7 +178,7 @@ if st.button("🕊️ 发送给丘比特"):
     else:
         st.info("不想说话也没关系，丘比特会静静地陪着你。☁️")
 
-# --- 功能二：能量补给站 (替代之前的测试) ---
+# --- 功能二：能量补给站 ---
 st.markdown("---")
 st.subheader("☀️ 小小能量站")
 st.write("如果心里太累，试着做一件最小的事，或者读一句暖暖的话。")
@@ -170,6 +217,6 @@ with st.expander("🆘 如果我感觉非常糟糕，该怎么办？"):
 # 页脚
 st.markdown("""
 <div style='text-align: center; color: #bcaaa4; margin-top: 40px; font-size: 12px;'>
-    愿温暖常伴你左右 | 暖暖丘比特 · 守护版
+    愿温暖常伴你左右 | 暖暖 · 守护版
 </div>
 """, unsafe_allow_html=True)
